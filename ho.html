@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truelancer - Global Freelance Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --radius: 1rem;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #93c5fd;
+            --secondary: #f3f4f6;
+            --accent: #1e40af;
+            --foreground: #1f2937;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            color: var(--foreground);
+            scroll-behavior: smooth;
+        }
+
+        .hero-globe {
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .skill-icon {
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .talent-card:hover .skill-icon {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .draw-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw 1.5s ease-in-out forwards;
+        }
+
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .section {
+            scroll-snap-align: start;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .counter {
+            transition: all 0.3s ease;
+        }
+
+        .flip-card {
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xl">T</div>
+                        <span class="ml-2 text-xl font-bold text-gray-900">Truelancer</span>
+                    </div>
+                </div>
+                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-8">
+                    <a href="#" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium">For Clients</a>
+                    <a href="#" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium">For Freelancers</a>
+                    <a href="#" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium">How It Works</a>
+                    <a href="#" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium">Pricing</a>
+                </div>
+                <div class="flex items-center">
+                    <a href="#" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium">Log In</a>
+                    <button class="ml-4 ripple bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 transform hover:scale-105">
+                        Sign Up
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="section min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white relative overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl opacity-10">
+            <svg class="hero-globe w-full h-full" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="var(--primary)" stroke-width="2"/>
+                <circle cx="100" cy="100" r="60" fill="none" stroke="var(--primary)" stroke-width="1" stroke-dasharray="5,5"/>
+                <path d="M100,20 A80,80 0 0,1 180,100 A80,80 0 0,1 100,180 A80,80 0 0,1 20,100 A80,80 0 0,1 100,20" fill="none" stroke="var(--primary)" stroke-width="1"/>
+                <circle cx="100" cy="100" r="40" fill="none" stroke="var(--primary)" stroke-width="1" stroke-dasharray="3,3"/>
+                <circle cx="150" cy="70" r="5" fill="var(--primary)"/>
+                <circle cx="60" cy="120" r="5" fill="var(--primary)"/>
+                <circle cx="130" cy="150" r="5" fill="var(--primary)"/>
+                <circle cx="70" cy="50" r="5" fill="var(--primary)"/>
+            </svg>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center relative z-10">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 text-gray-900 leading-tight">
+                Work With <span class="text-blue-600">Diverse Talent</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto">
+                Where unique skills meet human intelligence. Access top freelancers from around the world.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button class="ripple bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 transform hover:scale-105">
+                    Hire Talent
+                </button>
+                <button class="ripple bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 transform hover:scale-105">
+                    Join as Freelancer
+                </button>
+            </div>
+            <div class="mt-16 flex justify-center space-x-8">
+                <div class="pulse flex items-center">
+                    <div class="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                    <span class="text-gray-600">600,000+ Freelancers</span>
+                </div>
+                <div class="pulse flex items-center">
+                    <div class="w-3 h-3 rounded-full bg-purple-500 mr-2"></div>
+                    <span class="text-gray-600">50,000+ Clients</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients Section -->
+    <section class="section py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Trusted by leading companies</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Top companies hire on demand through Truelancer</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center">
+                <div class="flex justify-center">
+                    <div class="w-32 h-16 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                        <span class="text-gray-700 font-bold text-xl">Google</span>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="w-32 h-16 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                        <span class="text-gray-700 font-bold text-xl">Amazon</span>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="w-32 h-16 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                        <span class="text-gray-700 font-bold text-xl">Microsoft</span>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="w-32 h-16 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                        <span class="text-gray-700 font-bold text-xl">Apple</span>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="w-32 h-16 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                        <span class="text-gray-700 font-bold text-xl">Netflix</span>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="w-32 h-16 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                        <span class="text-gray-700 font-bold text-xl">Spotify</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Talent Categories -->
+    <section class="section py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Find the Right Talent</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Precision talent pairing powered by AI</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Developer Card -->
+                <div class="talent-card card-hover bg-white rounded-xl p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-16 h-16 bg-blue-100 rounded-bl-xl flex items-center justify-center">
+                        <i class="fas fa-code text-blue-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Developers</h3>
+                    <p class="text-gray-600 mb-6">Expert coders in all major languages and frameworks</p>
+                    <div class="flex flex-wrap gap-2">
+                        <div class="skill-icon bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">JavaScript</div>
+                        <div class="skill-icon bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">Python</div>
+                        <div class="skill-icon bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">Java</div>
+                        <div class="skill-icon bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">React</div>
+                        <div class="skill-icon bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">Node.js</div>
+                    </div>
+                    <div class="mt-6">
+                        <button class="text-blue-600 font-medium flex items-center">
+                            Browse Developers
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Designers Card -->
+                <div class="talent-card card-hover bg-white rounded-xl p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-16 h-16 bg-purple-100 rounded-bl-xl flex items-center justify-center">
+                        <i class="fas fa-paint-brush text-purple-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Designers</h3>
+                    <p class="text-gray-600 mb-6">Creative professionals for all your visual needs</p>
+                    <div class="flex flex-wrap gap-2">
+                        <div class="skill-icon bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm">UI/UX</div>
+                        <div class="skill-icon bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm">Illustration</div>
+                        <div class="skill-icon bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm">Photoshop</div>
+                        <div class="skill-icon bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm">Figma</div>
+                        <div class="skill-icon bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm">Branding</div>
+                    </div>
+                    <div class="mt-6">
+                        <button class="text-purple-600 font-medium flex items-center">
+                            Browse Designers
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Marketing Card -->
+                <div class="talent-card card-hover bg-white rounded-xl p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-16 h-16 bg-green-100 rounded-bl-xl flex items-center justify-center">
+                        <i class="fas fa-bullhorn text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Marketing</h3>
+                    <p class="text-gray-600 mb-6">Experts to grow your brand and reach</p>
+                    <div class="flex flex-wrap gap-2">
+                        <div class="skill-icon bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">SEO</div>
+                        <div class="skill-icon bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">Social Media</div>
+                        <div class="skill-icon bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">Content</div>
+                        <div class="skill-icon bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">PPC</div>
+                        <div class="skill-icon bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">Analytics</div>
+                    </div>
+                    <div class="mt-6">
+                        <button class="text-green-600 font-medium flex items-center">
+                            Browse Marketers
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section py-16 bg-blue-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">How Truelancer Works</h2>
+                <p class="text-xl text-blue-100 max-w-3xl mx-auto">3–7 days to onboard the perfect talent</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold">1</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Post Project</h3>
+                    <p class="text-blue-100">Describe your needs and requirements</p>
+                </div>
+                <div class="relative">
+                    <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-blue-500 transform -translate-y-1/2">
+                        <svg class="w-full h-4" viewBox="0 0 100 4" preserveAspectRatio="none">
+                            <path d="M0,2 L100,2" stroke="white" stroke-width="2" stroke-dasharray="5,5" class="draw-line"/>
+                        </svg>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl font-bold">2</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">AI Shortlist</h3>
+                        <p class="text-blue-100">Our AI matches you with top candidates</p>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-blue-500 transform -translate-y-1/2">
+                        <svg class="w-full h-4" viewBox="0 0 100 4" preserveAspectRatio="none">
+                            <path d="M0,2 L100,2" stroke="white" stroke-width="2" stroke-dasharray="5,5" class="draw-line"/>
+                        </svg>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl font-bold">3</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Interview</h3>
+                        <p class="text-blue-100">Connect with your top matches</p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold">4</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Hire & Work</h3>
+                    <p class="text-blue-100">Start collaborating with secure payments</p>
+                </div>
+            </div>
+            <div class="mt-16 text-center">
+                <button class="ripple bg-white hover:bg-gray-100 text-blue-600 px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 transform hover:scale-105">
+                    Get Started Now
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prime Services -->
+    <section class="section py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Truelancer Prime Services</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Premium solutions for your business needs</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="flex border-b border-gray-200 mb-8">
+                    <button class="tab-btn py-4 px-6 font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600" data-tab="talent">
+                        Prime Talent
+                    </button>
+                    <button class="tab-btn py-4 px-6 font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600" data-tab="managers">
+                        Prime Managers
+                    </button>
+                    <button class="tab-btn py-4 px-6 font-medium text-gray-600 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-600" data-tab="support">
+                        Prime Support
+                    </button>
+                </div>
+                
+                <div class="tab-content active" id="talent">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-4">Top 3% of Talent</h3>
+                            <p class="text-gray-600 mb-6">Access the most elite professionals in each field, rigorously vetted for excellence.</p>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Top-tier professionals only</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Guaranteed quality work</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Dedicated account manager</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center">
+                            <div class="w-64 h-64 bg-gradient-to-br from-blue-100 to-white rounded-full flex items-center justify-center">
+                                <div class="w-48 h-48 bg-blue-200 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-crown text-yellow-500 text-5xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="managers">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-4">Dedicated Project Managers</h3>
+                            <p class="text-gray-600 mb-6">Professional managers to oversee your projects and ensure successful delivery.</p>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Single point of contact</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Progress tracking</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Quality assurance</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center">
+                            <div class="w-64 h-64 bg-gradient-to-br from-purple-100 to-white rounded-full flex items-center justify-center">
+                                <div class="w-48 h-48 bg-purple-200 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user-tie text-purple-600 text-5xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="support">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-4">24/7 Premium Support</h3>
+                            <p class="text-gray-600 mb-6">Round-the-clock assistance for all your needs and questions.</p>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Instant response</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Technical assistance</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    <span class="text-gray-700">Priority resolution</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center">
+                            <div class="w-64 h-64 bg-gradient-to-br from-green-100 to-white rounded-full flex items-center justify-center">
+                                <div class="w-48 h-48 bg-green-200 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-headset text-green-600 text-5xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Recruiter -->
+    <section class="section py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Smart Hires Powered by AI</h2>
+                    <p class="text-xl text-gray-600 mb-8">Our AI analyzes thousands of data points to match you with the perfect talent for your project.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-brain text-blue-600"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-bold text-gray-900">Personalized Matching</h3>
+                                <p class="text-gray-600">AI learns your preferences to suggest better matches over time.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-chart-line text-purple-600"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-bold text-gray-900">Performance Analytics</h3>
+                                <p class="text-gray-600">Detailed insights into freelancer performance and reliability.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-shield-alt text-green-600"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-bold text-gray-900">Risk Assessment</h3>
+                                <p class="text-gray-600">Predictive analysis to flag potential issues before they occur.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flip-card h-96">
+                    <div class="flip-card-inner h-full">
+                        <div class="flip-card-front bg-white rounded-xl shadow-lg p-8 h-full flex flex-col">
+                            <div class="flex items-center mb-6">
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-robot text-blue-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900">AI Recruiter</h3>
+                                    <p class="text-sm text-gray-600">Your personal hiring assistant</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex-1 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="w-32 h-32 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                        <i class="fas fa-search text-blue-600 text-4xl"></i>
+                                    </div>
+                                    <p class="text-gray-700 mb-4">Hover to see talent score breakdown</p>
+                                    <button class="text-blue-600 font-medium">How it works →</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flip-card-back bg-blue-600 text-white rounded-xl shadow-lg p-8 h-full">
+                            <h3 class="font-bold text-xl mb-6">Talent Score Breakdown</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Skills</span>
+                                        <span>92%</span>
+                                    </div>
+                                    <div class="w-full bg-blue-700 rounded-full h-2">
+                                        <div class="bg-green-400 h-2 rounded-full" style="width: 92%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Experience</span>
+                                        <span>88%</span>
+                                    </div>
+                                    <div class="w-full bg-blue-700 rounded-full h-2">
+                                        <div class="bg-green-400 h-2 rounded-full" style="width: 88%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Communication</span>
+                                        <span>95%</span>
+                                    </div>
+                                    <div class="w-full bg-blue-700 rounded-full h-2">
+                                        <div class="bg-green-400 h-2 rounded-full" style="width: 95%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Reliability</span>
+                                        <span>90%</span>
+                                    </div>
+                                    <div class="w-full bg-blue-700 rounded-full h-2">
+                                        <div class="bg-green-400 h-2 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Client Feedback</span>
+                                        <span>94%</span>
+                                    </div>
+                                    <div class="w-full bg-blue-700 rounded-full h-2">
+                                        <div class="bg-green-400 h-2 rounded-full" style="width: 94%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 pt-6 border-t border-blue-500">
+                                <p class="text-blue-100">Overall Score: <span class="font-bold text-white">91.8%</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+                    <div class="text-5xl font-bold text-blue-600 mb-4 counter" data-target="600000">0</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Freelancers</h3>
+                    <p class="text-gray-600">Global network of professionals</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+                    <div class="text-5xl font-bold text-blue-600 mb-4 counter" data-target="50000">0</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Clients</h3>
+                    <p class="text-gray-600">Businesses of all sizes</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+                    <div class="text-5xl font-bold text-blue-600 mb-4 counter" data-target="98">0</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Satisfaction</h3>
+                    <p class="text-gray-600">Client satisfaction rate</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section py-16 bg-blue-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Find Your Perfect Match?</h2>
+            <p class="text-xl text-blue-100 mb-10 max-w-3xl mx-auto">Join thousands of businesses already working with the world's top freelance talent.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button class="ripple bg-white hover:bg-gray-100 text-blue-600 px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 transform hover:scale-105">
+                    Hire Talent Now
+                </button>
+                <button class="ripple bg-transparent hover:bg-blue-700 text-white border border-white px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 transform hover:scale-105">
+                    Join as Freelancer
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xl">T</div>
+                        <span class="ml-2 text-xl font-bold">Truelancer</span>
+                    </div>
+                    <p class="text-gray-400">The global freelance marketplace connecting businesses with top talent.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">For Clients</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">How to Hire</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Talent Marketplace</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Project Catalog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Hiring Resources</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">For Freelancers</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">How to Find Work</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Direct Contracts</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Find Freelance Jobs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Freelance Resources</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Leadership</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Investor Relations</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Careers</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 Truelancer. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Fixed CTA -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg py-3 px-6 flex justify-between items-center z-50">
+        <div class="hidden md:block">
+            <p class="text-gray-900 font-medium">Join Truelancer — It's Free</p>
+        </div>
+        <div class="flex space-x-4 w-full md:w-auto">
+            <button class="ripple flex-1 md:flex-none bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full text-sm font-medium transition-all duration-300">
+                Sign Up
+            </button>
+            <button class="ripple flex-1 md:flex-none bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300">
+                Learn More
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Ripple effect for buttons
+        document.querySelectorAll('.ripple').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple-effect');
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Show selected tab content
+                document.getElementById(tabId).classList.add('active');
+                
+                // Update active tab button
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('border-blue-600', 'text-blue-600');
+                });
+                button.classList.add('border-blue-600', 'text-blue-600');
+            });
+        });
+
+        // Counter animation
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200;
+
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            const count = +counter.innerText;
+            const increment = target / speed;
+            
+            if (count < target) {
+                counter.innerText = Math.ceil(count + increment);
+                setTimeout(updateCounter, 1);
+            } else {
+                counter.innerText = target.toLocaleString();
+            }
+            
+            function updateCounter() {
+                const count = +counter.innerText.replace(/,/g, '');
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment).toLocaleString();
+                    setTimeout(updateCounter, 1);
+                } else {
+                    counter.innerText = target.toLocaleString();
+                }
+            }
+        });
+
+        // Animate elements when they come into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.skill-icon, .draw-line').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
