@@ -1,4 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
+import heroIllustration from "../assets/HeroIllustration.svg";
 
 const Hero = () => {
   const phrases = [
@@ -105,29 +106,7 @@ const Hero = () => {
             <div className="absolute inset-0 bg-blue-500 rounded-2xl transform rotate-6"></div>
             <div className="relative glass-card rounded-2xl p-6 shadow-xl">
               <div className="flex justify-center items-center h-full min-h-[400px]">
-                <div className="text-center">
-                  <div className="floating inline-block mb-6">
-                    <div className="bg-blue-100 p-6 rounded-full">
-                      <i className="fas fa-network-wired text-blue-600 text-4xl"></i>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-4">
-                      <div className="bg-white p-3 rounded-lg shadow">
-                        <i className="fas fa-user-tie text-blue-600"></i>
-                      </div>
-                      <div className="bg-white p-3 rounded-lg shadow">
-                        <i className="fas fa-project-diagram text-blue-600"></i>
-                      </div>
-                      <div className="bg-white p-3 rounded-lg shadow">
-                        <i className="fas fa-handshake text-blue-600"></i>
-                      </div>
-                    </div>
-                    <div className="text-sm text-slate-500">
-                      Connecting the right talent with the right projects
-                    </div>
-                  </div>
-                </div>
+                <img src={heroIllustration} alt="Hero Illustration" />
               </div>
             </div>
           </div>
