@@ -1,7 +1,7 @@
 import { h } from 'preact';
 
 const ServiceCard = ({ icon, title, description, tag, features }) => (
-  <div className="flip-card h-full">
+  <div className="flip-card" style={{ height: '400px' }}>
     <div className="flip-card-inner h-full">
       <div className="flip-card-front bg-white rounded-xl shadow-sm hover:shadow-md transition duration-300 border border-slate-100 overflow-hidden h-full">
         <div className="p-6 h-full flex flex-col">
